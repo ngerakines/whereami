@@ -100,6 +100,25 @@
 					</form>
 				</div>
 			</div>
+			<div class="row">
+				<div class="span6">
+					<h1>Geo Tool</h1>
+					<p>Use this from to get coordinates of a street address.</p>
+					<form class="form-horizontal" action="/admin/geo">
+						<div class="control-group">
+							<label class="control-label" for="inputAddress">Location</label>
+							<div class="controls">
+								<input type="text" id="inputAddress" name="address" />
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="controls">
+								<button type="submit" class="btn">Locate</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 		<script src="{{ static_url("js/jquery-2.0.0.js") }}"></script>
 		<script src="{{ static_url("js/bootstrap.js") }}"></script>
