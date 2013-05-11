@@ -129,7 +129,7 @@
           {% if 'current_location' in status %}
 					<p class="lead">Current location: {{ status['current_location'] }}</p>
           {% end %}
-          {% if 'current_geo' in status %}
+          {% if 'current_geo' in status and len(status['current_geo']) > 2 %}
 					<div id="mapCanvas"></div>
           {% end %}
 				</div>
@@ -137,16 +137,13 @@
 		</div>
 		<script src="{{ static_url("js/jquery-2.0.0.js") }}"></script>
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;language=en"></script>
-    {% if 'current_geo' in status %}
-		<script type="text/javascript" src="{{ static_url("js/gmap3.js") }}"></script>
-    {% end %}
 		<script src="{{ static_url("js/bootstrap.js") }}"></script>
-    {% if 'current_geo' in status %}
+    {% if 'current_geo' in status and len(status['current_geo']) > 2 %}
+    <script type="text/javascript" src="{{ static_url("js/gmap3.js") }}"></script>
 		<script type="text/javascript">
     $(function(){
 $("#mapCanvas").gmap3({
  map:{
- 	// https://maps.google.com/?ll=33.657701,-117.766142&spn=0.001732,0.003009&t=m&z=19
     options:{
      center: [{{ status['current_geo'][0] }}, {{ status['current_geo'][1] }}],
      zoom: 17
