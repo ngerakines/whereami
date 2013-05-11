@@ -1,0 +1,14 @@
+/* TEAM */
+Developer: Nick Gerakines
+Site: http://ngerakines.me/
+Twitter: @ngerakines
+Location: Irvine, CA
+
+/* SITE */
+Last update: 2013/05/11
+Standards: HTML5, CSS3
+Software: Vim, Git, Python
+
+/* SOURCE */
+Source: https://github.com/ngerakines/whereami
+License: MIT

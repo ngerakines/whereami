@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Status Manager</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="author" href="{{ static_url("humans.txt") }}" />
+		<link href="{{ static_url("css/bootstrap.css") }}" rel="stylesheet">
+		<link href="{{ static_url("css/bootstrap-responsive.css") }}" rel="stylesheet">
+	</head>
+
+	<body>
+		<div class="container">
+			<ul class="breadcrumb">
+				<li><a href="/">Home</a> <span class="divider">/</span></li>
+				<li class="active">Status Manager</li>
+			</ul>
+			<div class="page-header">
+				<h1>Status Manager</h1>
+			</div>
+			<div class="row">
+				{% for preset in presets %}
+				<div class="span2">
+					<form class="form-horizontal" method="post">
+						{% for value in presets[preset]["values"] %}
+						<input type="hidden" name="{{ value }}" value="{{ presets[preset]["values"][value] }}" />
+						{% end %}
+						<input class="btn btn-{{ presets[preset]["style"] }}" type="submit" value="{{ preset }}">
+					</form>
+				</div>
+				{% end %}
+			</div>
+			<div class="row">
+				<div class="span12">
+					<h1>Custom</h1>
+					<form class="form-horizontal" method="post">
+						<div class="control-group">
+							<div class="controls">
+								{% for type in communication_types %}
+								<label class="checkbox"><input type="checkbox" name="clear_{{ type }}" value="true">Clear {{ type }}.</label>
+								{% end %}
+								<label class="checkbox"><input type="checkbox" name="clear_current_location" value="true">Clear current location.</label>
+								<label class="checkbox"><input type="checkbox" name="clear_current_state" value="true">Clear current state.</label>
+								<label class="checkbox"><input type="checkbox" name="clear_best_phone" value="true">Clear best phone.</label>
+								<label class="checkbox"><input type="checkbox" name="clear_current_geo" value="true">Clear geo.</label>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputCurrentState">Current Status</label>
+							<div class="controls">
+								<select id="inputCurrentState" name="current_state">
+									<option{% if status['current_state'] == 'Relaxing' %} selected="selected"{% end %}>Relaxing</option>
+									<option{% if status['current_state'] == 'Working' %} selected="selected"{% end %}>Working</option>
+									<option{% if status['current_state'] == 'Away' %} selected="selected"{% end %}>Away</option>
+									<option{% if status['current_state'] == 'Traveling' %} selected="selected"{% end %}>Traveling</option>
+									<option{% if status['current_state'] == 'Unavailable' %} selected="selected"{% end %}>Unavailable</option>
+									<option>Unknown</option>
+								</select>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputCurrentLocation">Current Location</label>
+							<div class="controls">
+								<input type="text" id="inputCurrentLocation" name="current_location" value="{% if 'current_location' in status %}{{ status['current_location'] }}{% end %}" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputCurrentGeo">Current Geo</label>
+							<div class="controls">
+								<input type="text" id="inputCurrentLocation" name="current_geo" value="{% if 'current_geo' in status and len(status['current_geo']) > 2 %}{{ status['current_geo'][0] }},{{ status['current_geo'][1] }}{% end %}" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputBestEmail">Best Email</label>
+							<div class="controls">
+								<input type="text" id="inputBestEmail" name="best_email" value="{% if 'best_email' in status %}{{ status['best_email'] }}{% end %}" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputBestPhone">Best Phone</label>
+							<div class="controls">
+								<input type="text" id="inputBestPhone" name="best_phone" value="{% if 'best_phone' in status %}{{ status['best_phone'] }}{% end %}" />
+							</div>
+						</div>
+						{% for type in communication_types %}
+						<div class="control-group">
+							<label class="control-label">{{ type }}</label>
+							<div class="controls">
+								<label class="radio"><input type="radio" name="{{ type }}" id="optionsRadios1" value="ok"{% if type in status and status[type] == 'ok' %} checked="checked"{% end %}>Available</label>
+								<label class="radio"><input type="radio" name="{{ type }}" id="optionsRadios2" value="remove"{% if type in status and status[type] == 'remove' %} checked="checked"{% end %}>Unavailable</label>
+								<label class="radio"><input type="radio" name="{{ type }}" id="optionsRadios3" value="question-sign"{% if type in status and status[type] == 'question-sign' %} checked="checked"{% end %}>Unknown</label>
+							</div>
+						</div>
+						{% end %}
+						<div class="control-group">
+							<div class="controls">
+								<button type="submit" class="btn">Update</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="{{ static_url("js/jquery-2.0.0.js") }}"></script>
+		<script src="{{ static_url("js/bootstrap.js") }}"></script>
+	</body>
+</html>

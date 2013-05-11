@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+		<meta charset="utf-8">
+		<title>Where Am I?</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="author" href="{{ static_url("humans.txt") }}" />
+
+		<link href="{{ static_url("css/bootstrap.css") }}" rel="stylesheet">
+		<style type="text/css">
+		body {
+        /*padding-top: 20px;
+        padding-bottom: 60px;*/
+      }
+
+      /* Custom container */
+      .container {
+        margin: 0 auto;
+        max-width: 1000px;
+      }
+      /*.container > hr {
+        margin: 60px 0;
+      }*/
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+       /* margin: 80px 0;*/
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 100px;
+        line-height: 1;
+      }
+      .jumbotron .lead {
+        font-size: 24px;
+        line-height: 1.25;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+
+
+      /* Customize the navbar links to be fill the entire space of the .navbar */
+      .navbar .navbar-inner {
+        padding: 0;
+      }
+      .navbar .nav {
+        margin: 0;
+        display: table;
+        width: 100%;
+      }
+      .navbar .nav li {
+        display: table-cell;
+        width: 1%;
+        float: none;
+      }
+      .navbar .nav li a {
+        font-weight: bold;
+        text-align: center;
+        border-left: 1px solid rgba(255,255,255,.75);
+        border-right: 1px solid rgba(0,0,0,.1);
+      }
+      .navbar .nav li:first-child a {
+        border-left: 0;
+        border-radius: 3px 0 0 3px;
+      }
+      .navbar .nav li:last-child a {
+        border-right: 0;
+        border-radius: 0 3px 3px 0;
+      }
+			#mapCanvas{
+ height: 350px;
+ width: 600px;
+ padding: 20px;
+}
+		</style>
+		<link href="{{ static_url("css/bootstrap-responsive.css") }}" rel="stylesheet">
+		<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="container">
+			<div class="alert">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				This is a message that I've left. It may be configured to be displayed during a specific time period or until I disable it.
+			</div>
+			<div class="jumbotron">
+        {% if 'current_state' in status %}
+        {% if status['current_state'] == 'Working' %}
+        <h1>Nick is <span class="text-info">Working</span></h1>
+        {% elif status['current_state'] == 'Relaxing' %}
+        <h1>Nick is <span class="text-success">Relaxing</span></h1>
+        {% elif status['current_state'] == 'Away' %}
+        <h1>Nick is <span class="text-error">Away</span></h1>
+        {% elif status['current_state'] == 'Traveling' %}
+        <h1>Nick is <span class="text-warning">Traveling</span></h1>
+        {% elif status['current_state'] == 'Unavailable' %}
+        <h1>Nick is <span class="text-error">Unavailable</span></h1>
+        {% else %}
+        <h1>Nick is <span class="muted">... Unknown</span></h1>
+        {% end %}
+        {% else %}
+        <h1>Nick is <span class="muted">... Unknown</span></h1>
+        {% end %}
+				<p><small>Last updated {{ status['last_updated'] }}</small></p>
+			</div>
+			<div class="row">
+				<div class="span12">
+          <p>
+            {% for type in communication_types %}
+              {{ type }} <i class="icon-{{ status[type] }}"></i> |
+            {% end %}
+            {% if 'best_phone' in status %}{{ status['best_phone'] }}{% else %}Phone N/A{% end %} |
+            {% if 'best_email' in status %}{{ status['best_email'] }}{% else %}Email N/A{% end %}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span12">
+          {% if 'current_location' in status %}
+					<p class="lead">Current location: {{ status['current_location'] }}</p>
+          {% end %}
+          {% if 'current_geo' in status %}
+					<div id="mapCanvas"></div>
+          {% end %}
+				</div>
+			</div>
+		</div>
+		<script src="{{ static_url("js/jquery-2.0.0.js") }}"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;language=en"></script>
+    {% if 'current_geo' in status %}
+		<script type="text/javascript" src="{{ static_url("js/gmap3.js") }}"></script>
+    {% end %}
+		<script src="{{ static_url("js/bootstrap.js") }}"></script>
+    {% if 'current_geo' in status %}
+		<script type="text/javascript">
+    $(function(){
+$("#mapCanvas").gmap3({
+ map:{
+ 	// https://maps.google.com/?ll=33.657701,-117.766142&spn=0.001732,0.003009&t=m&z=19
+    options:{
+     center: [{{ status['current_geo'][0] }}, {{ status['current_geo'][1] }}],
+     zoom: 17
+    }
+ },
+ marker:{
+    latLng: [{{ status['current_geo'][0] }}, {{ status['current_geo'][1] }}]
+ }
+});
+    });
+		</script>
+    {% end %}
+	</body>
+</html>
